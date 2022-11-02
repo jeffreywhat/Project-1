@@ -1,0 +1,72 @@
+---
+title: "6101 Project 1"
+author: Jeffrey Hu, Aaron Rock, Sanchit Vijay
+date: 9/27/22 to 10/27/22
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r init, include=FALSE}
+# some of common options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+library(ezids)
+library(ggplot2)
+library(tidyverse)
+
+# knitr::opts_chunk$set(warning = F, results = "markup", message = F)
+knitr::opts_chunk$set(warning = F, results = "hide", message = F)
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+# ‘scipen’: integer. A penalty to be applied when deciding to print numeric values in fixed or exponential notation.  Positive values bias towards fixed and negative towards scientific notation: fixed notation will be preferred unless it is more than ‘scipen’ digits wider.
+# use scipen=999 to prevent scientific notation at all times
+```
+
+```{r}
+#First, load the file and libraries
+zillow_prices = data.frame(read.csv("price.csv"))
+zillow_focus = zillow_prices[c(1:5,7,13,17,23,24,26,113,162),]
+zillow_focus = zillow_focus[c(-1,-3,-4,-5,-6)]
+zillow_focus
+```
+Our cities of interest are NYC (Queens) (only data from December 2011 Onwards), LA, PA, Houston (Harris), Chicago (Cook), Dallas, Las Vegas, San Fran, Detroit (Wayne), Roanoke, Richmond, District of Columbia, Baltimore, Seattle(King). Here, we clean data set and transpose the dates/cities
+```{r, results="markup"}
+rownames(zillow_focus) = zillow_focus$City
+zillow_focus = zillow_focus[c(-1)]
+zillow_focus = as.data.frame(t(zillow_focus))
+names(zillow_focus)<-str_replace_all(names(zillow_focus), c(" " = "" , "," = ""))
+head(zillow_focus)
+str(zillow_focus)
+```
+
+Turn date into a column.
+
+```{r, results="markup"}
+zillow_focus <- cbind(Date = rownames(zillow_focus), zillow_focus)
+rownames(zillow_focus) <- 1:nrow(zillow_focus)
+head(zillow_focus)
+zillow_focus <- cbind(Index = rownames(zillow_focus), zillow_focus)
+rownames(zillow_focus) <- 1:nrow(zillow_focus)
+head(zillow_focus)
+```
+
+I'm not sure if histograms would be meaningful in the context of my problem, but here's one.
+
+```{r}
+ggplot(zillow_focus, aes(x=NewYork)) + geom_histogram(bins=10)
+```
+
+
+
+We will probably have to pivot the file a bit, since the dates are columns.
+
+Should we plot time series of interested areas, say NYC and LA, or just stick to states and compare each to each other? How should we measure greatest change, percent differences or measured differences?
+
+Should we take a histo and boxplots of the data as a  whole?
