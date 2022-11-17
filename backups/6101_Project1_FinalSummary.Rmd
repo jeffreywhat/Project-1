@@ -1,0 +1,587 @@
+---
+title: "6101 Project 1"
+author: Jeffrey Hu, Aaron Rock, Sanchit Vijay
+date: 9/27/22 to 10/27/22
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r init, include=FALSE}
+# some of common options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+# Make sure that install.packages("matrixStats"), install.packages("reshape2"), install.packages("reshape") are installed
+
+library(ezids)
+library(ggplot2)
+library(tidyverse)
+library(MASS)
+library(reshape)
+library(dplyr)
+library(matrixStats)
+library(zoo)
+library(ggfortify)
+library(reshape2)
+library(hexbin)
+# knitr::opts_chunk$set(warning = F, results = "markup", message = F)
+knitr::opts_chunk$set(warning = F, results = "hide", message = F)
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+# ‘scipen’: integer. A penalty to be applied when deciding to print numeric values in fixed or exponential notation.  Positive values bias towards fixed and negative towards scientific notation: fixed notation will be preferred unless it is more than ‘scipen’ digits wider.
+# use scipen=999 to prevent scientific notation at all times
+```
+
+# Introduction to the Dataset
+The dataset we explored is on the monthly rental prices of the United States of America from 2010 to 2017 sourced from the application Zillow. This dataset was found on the website Kaggle and has no listed author. The contents of the dataset covers all types of properties such as apartments, townhomes, single family, and multi-family properties that make up the median city code price listing. The information was gathered from the Zillow database of more than 100 million homes at the time. It is important to note a few important facts about the dataset before going into any more detail. First off, the rental prices are not listings of physical properties but in fact show the median price of the specific city code. Secondly, the dataset does not include every geographical location in the United States and does not include the state of Alaska. Our dataset consists of 13131 observations. There are 1738 rows that are completely empty so after removing these rows we have 11348 observations and 81 variables. Our variables consist of the city code, which is the unique identification of each observation, along with the city, state, metro, country, and population rank. The rest of the variables are time stamps of the monthly rental price of that row’s city code from November 2010 to January 2017. Zillow forecasted the rent medians, also known as Zestimates, from exclusive statistical and machine learning models. Zestimates' history only goes back until November 2010, hence why the first time stamp begins on this date. Our dataset was last updated on January 2017, which will be the last variable of the overall dataset.
+  
+# Biases, Limitations, and Original Analytics
+As was stated above the dataset does not include every single zip code in the United States and affected certain results in our EDA. The data points are median terms given for each month over the time period and attributed to each city code. This can be a cause of bias when we are trying to look at the total population of rent prices over the United States, as city codes do not evenly represent the entire US. Because the data is only from Zillow, it may under or over represent some areas, or give misleading points, depending on how commonly Zillow is used in those areas. There are a plethora of websites and companies that list rental properties, and some are more popular than others in distinct regions. A possible bias we must manage is that we have chosen a dataset that limits itself to only using properties that were listed on the Zillow website, so when we observe the locations and their rental prices in the dataset, the set only considers the information that was listed on Zillow and used for Zillow's Zestimate. Likewise, the dataset of medians is derived from a machine learning algorithm, which can have its own errors. Because this dataset shows the median values over time, the analysis of median vs mean as the better center of measure in the context of rent prices has most likely already been completed on the data compiler's side. This indicates that the original data set had already calculated the measures of centers along the time frame for us.
+
+# Questions Posed
+The goal of exploring the Zillow dataset was to answer and look into three main questions that were introduced about how time and location affected rental prices. The first questions we asked about the east and west coast was "What region’s price rose the most?", "Were they similar from the first time stamp to the last time stamp?", and "Was there ever overlapping in pricing?" Secondly, among the cities of interest, which cities saw the most total growth, and proportional growth? Which cities had differing average proportional change? Lastly, with the total population, we wanted to show the total count divided by states, and represent the data through time series plots.
+
+```{r, echo = FALSE}
+#First, load the file
+# Import the data
+zillow = data.frame(read.csv("price.csv"))
+head(zillow)
+```
+```{r, echo = FALSE}
+# Remove blank pricing data
+# Remove empty rows, NA's are only present if no data was collected for the location
+zillow = na.omit(zillow)
+```
+
+```{r, echo = FALSE}
+# Subset the Zillow data into east coast and west coast and annual subsets of the regions.
+# going through and discarding states that are not defined by the Uited States as West or East coast states
+
+eastcoast = subset(zillow, State == 'CT' | State == 'NY' | State == 'VA' | State == 'FL' | State == 'NJ' | State == 'NC' |State == 'SC' | State == 'GA' | State == 'DE' | State == 'MA' | State == 'MD' | State == 'ME' | State == 'RI' | State == 'NH')
+eastcoast_annual = eastcoast[,c(1:81)]
+eastcoast_annual = eastcoast_annual[-c(8,9,10,11,12,13,14,15,16,17,18)]
+eastcoast_annual = eastcoast_annual[-c(9,10,11,12,13,14,15,16,17,18,19)]
+eastcoast_annual = eastcoast_annual[-c(10,11,12,13,14,15,16,17,18,19,20)]
+eastcoast_annual = eastcoast_annual[-c(11,12,13,14,15,16,17,18,19,20,21)]
+eastcoast_annual = eastcoast_annual[-c(12,13,14,15,16,17,18,19,20,21,22)]
+eastcoast_annual = eastcoast_annual[-c(13,14,15,16,17,18,19,20,21,22,23)]
+eastcoast_annual = eastcoast_annual[-c(14,15)]
+
+westcoast = subset(zillow, State == 'CA' | State == 'OR' | State == 'WA' | State == 'HI' | State == 'AK')
+
+westcoast_annual = westcoast[,c(1:81)]
+westcoast_annual = westcoast_annual[-c(8,9,10,11,12,13,14,15,16,17,18)]
+westcoast_annual = westcoast_annual[-c(9,10,11,12,13,14,15,16,17,18,19)]
+westcoast_annual = westcoast_annual[-c(10,11,12,13,14,15,16,17,18,19,20)]
+westcoast_annual = westcoast_annual[-c(11,12,13,14,15,16,17,18,19,20,21)]
+westcoast_annual = westcoast_annual[-c(12,13,14,15,16,17,18,19,20,21,22)]
+westcoast_annual = westcoast_annual[-c(13,14,15,16,17,18,19,20,21,22,23)]
+westcoast_annual = westcoast_annual[-c(14,15)]
+
+westcoast = westcoast[-c(2,3,4,5,6)]
+
+westAnn = westcoast_annual
+westAnn = westAnn[-c(2,3,4,5,6)]
+
+eastAnn = eastcoast_annual
+eastAnn = eastAnn[-c(2,3,4,5,6)]
+```
+
+
+```{r, echo = FALSE}
+# Find the difference between of rent price and add it as a column AND add average price of rent over the years column
+# use dplyr package to create new columns Price.Diff and Avg.Price
+eastcoast_annual <- eastcoast_annual %>%
+    mutate(Price.Diff = November.2016 - November.2010)
+
+westcoast_annual <- westcoast_annual %>%
+    mutate(Price.Diff = November.2016 - November.2010)
+
+eastcoast_annual <- eastcoast_annual %>%
+     mutate(Avg.Price = rowMeans(eastcoast_annual[7:13]))
+
+westcoast_annual <- westcoast_annual %>%
+     mutate(Avg.Price = rowMeans(westcoast_annual[7:13]))
+```
+
+
+
+
+
+```{r, echo = FALSE}
+# Clean Data of Outliers
+# clean the data
+westcoast_annualClean = outlierKD2(westcoast_annual, November.2010, rm = TRUE, FALSE,FALSE,FALSE)
+westcoast_annualClean = outlierKD2(westcoast_annualClean, November.2016, rm = TRUE, FALSE,FALSE,FALSE)
+westcoast_annualClean = outlierKD2(westcoast_annualClean, Avg.Price, rm = TRUE, FALSE,FALSE,FALSE)
+westcoast_annualClean = outlierKD2(westcoast_annualClean, Price.Diff, rm = TRUE, FALSE,FALSE,FALSE)
+
+eastcoast_annualClean = outlierKD2(eastcoast_annual, November.2010, rm = TRUE, FALSE,FALSE,FALSE)
+eastcoast_annualClean = outlierKD2(eastcoast_annualClean, November.2016, rm = TRUE, FALSE,FALSE,FALSE)
+eastcoast_annualClean = outlierKD2(eastcoast_annualClean, Avg.Price, rm = TRUE, FALSE,FALSE,FALSE)
+eastcoast_annualClean = outlierKD2(eastcoast_annualClean, Price.Diff, rm = TRUE, FALSE,FALSE,FALSE)
+```
+
+
+```{r, echo = FALSE}
+# Transpose Data Correctly
+rownames(westAnn) = westAnn$City.Code
+westAnn = westAnn[c(-1)]
+westAnn = as.data.frame(t(westAnn))
+names(westAnn)<-str_replace_all(names(westAnn), c(" " = "" , "," = ""))
+westAnn <- cbind(Date = rownames(westAnn), westAnn)
+rownames(westAnn) <- 1:nrow(westAnn)
+head(westAnn)
+
+
+rownames(eastAnn) = eastAnn$City.Code
+eastAnn = eastAnn[c(-1)]
+eastAnn = as.data.frame(t(eastAnn))
+names(eastAnn)<-str_replace_all(names(eastAnn), c(" " = "" , "," = ""))
+eastAnn <- cbind(Date = rownames(eastAnn), eastAnn)
+rownames(eastAnn) <- 1:nrow(eastAnn)
+head(eastAnn)
+```
+
+
+# East Coast versus West Coast
+
+### Understanding the Histograms
+
+The first question to be discussed will be the differences and comparisons of the East Coast and West Coast. Each region is defined by what the United States refers to as East and West coast. The East Coast is made up of fourteen states, and after subsetting from the original lump data frame, has 3988 observations. The West Coast is comprised of five states, and following the creation of its own data frame, the west coast has 1221 observations. We will first look at the frequency of rental prices by viewing the histograms of each region and the month of November, 2010, depicted in the light red color, and the month of November, 2016, shown in the light blue color. For each chart shown there will be a plot that includes outliers, and a chart that will not include outliers, to help visualize the impact of outliers on the distribution. 
+
+```{r fig1, fig.height = 5, fig.width = 7, fig.align = "center"}
+library(ggplot2)
+
+colors <- c("November.2010" = "red", "November.2016" = "blue")
+
+ggplot(westcoast_annual) + 
+    geom_histogram(aes(November.2010, fill = "November.2010"),alpha = 0.4, bins = 40) + 
+    geom_histogram(aes(November.2016, fill = "November.2016"),alpha = 0.4, bins = 40) + 
+    labs(title = "Rental Price Count on the West Coast from November 2010 to November 2016 with Outliers", x = "Rental Prices", 
+         y = "Frequency", fill = "Legend") +
+    scale_color_manual(values = colors)
+
+
+ggplot(westcoast_annualClean) + 
+    geom_histogram(aes(November.2010, fill = "November.2010"),alpha = 0.4, bins = 40) + 
+    geom_histogram(aes(November.2016, fill = "November.2016"),alpha = 0.4, bins = 40) + 
+    labs(title = "Rental Price Count on the West Coast from November 2010 to November 2016 without Outliers", x = "Rental Prices", 
+         y = "Frequency", fill = "Legend") +
+    scale_color_manual(values = colors)
+```
+
+The most observed rental price for the West Coast for both November 2010 and 2016 sat right around 1250 a month, with the bin shifting slightly to the right for the year 2016. The number of frequencies were above 100 for the year of 2010 and about 75 for the year of 2016. Prices for this region did get more expensive, and we noticed that for 2016, the plot is moving up the x-axis, showing that prices were climbing.
+
+```{r fig2, fig.height = 5, fig.width = 7, fig.align = "center"}
+colors <- c("November.2010" = "red", "November.2016" = "blue")
+
+ggplot(eastcoast_annual) + 
+    geom_histogram(aes(November.2010, fill = "November.2010"),alpha = 0.4, bins = 40) + 
+    geom_histogram(aes(November.2016, fill = "November.2016"),alpha = 0.4, bins = 40) + 
+    labs(title = "Rental Price Count on the East Coast from November 2010 to November 2016", x = "Rental Prices", 
+         y = "Frequency", fill = "Legend") +
+    scale_color_manual(values = colors)
+
+ggplot(eastcoast_annualClean) + 
+    geom_histogram(aes(November.2010, fill = "November.2010"),alpha = 0.4, bins = 40) + 
+    geom_histogram(aes(November.2016, fill = "November.2016"),alpha = 0.4, bins = 40) + 
+    labs(title = "Rental Price Count on the East Coast from November 2010 to November 2016", x = "Rental Prices", 
+         y = "Frequency", fill = "Legend") +
+    scale_color_manual(values = colors)
+```
+
+For the East coast, it is again clear that about 1250 a month for the rental price is the most frequent price. Just like with the West coast, we see that the blue, depicting the year 2016, is pulling itself up the x-axis again, showing climbing rental prices. One thing to note about the East coast plots is that the y-axis displayed a range of higher prices, showing the clear differences in observations between the two regions.
+
+# Results of Boxplots
+
+When looking at each state in the separate regions when plotted as a boxplot, it is clear there is a wide variety of means and interquartile ranges. For the West coast, we see that all states for the years 2010 and 2016 have overlapping interquartile ranges, which tells us that, for the West coast, the prices are somewhat similar for each state. Going back to the limitations of the dataset, it’s obvious when plotted that the west coast holds two states that are known nationally for having higher rental prices (Hawaii and California), and although Alaska is defined as a West coast state, it was not included in the original dataset. Furthermore, the East coast region, when plotted, shows interquartile ranges and means that are not always overlapping with the other states in the region. This also highlights some of the bias of which city codes were chosen when the original dataset was assembled.
+
+### West Coast 
+
+```{r, figures-side2, fig.show="hold", out.width="50%"}
+ggplot(westcoast_annualClean, aes(State, November.2010, color=State)) + geom_boxplot()+labs(title = "West Coast States November 2010 Rent Prices without Outliers")
+ggplot(westcoast_annualClean, aes(State, November.2016, color=State)) + geom_boxplot()+labs(title = "West Coast States November 2016 Rent Prices without Outliers")
+```
+
+### East Coast
+
+```{r, figures-side4, fig.show="hold", out.width="50%"}
+ggplot(eastcoast_annualClean, aes(State, November.2010, color=State)) + geom_boxplot()+labs(title = "East Coast States November 2010 Rent Prices without Outliers")
+ggplot(eastcoast_annualClean, aes(State, November.2016, color=State)) + geom_boxplot()+labs(title = "East Coast States November 2016 Rent Prices without Outliers")
+```
+
+Clearly, after plotting the coasts as a whole region of the coast’s states, the West coast is seen to have generally higher rental prices on both the November 2010 plot and the November 2016 plot. The average of the West coast monthly rental price on November 2010 is 1534 a month, with the interquartile ranging from 1171 to 1834 a month. For the November 2016 plot, the average monthly rental price is 1823 a month, with an interquartile range spanning from 1294 to 2272 a month. 
+
+```{r, figures-side5, fig.show="hold", out.width="50%"}
+ggplot(westcoast_annualClean, aes(x=November.2010)) + geom_boxplot(color="blue", outlier.shape = 9, outlier.size = 2, outlier.color = "blue") + labs(title="Entire West Coast November 2010 Boxplot") + scale_x_continuous(breaks=seq(500, 4000, 500))
+ggplot(westcoast_annualClean, aes(x=November.2016)) + geom_boxplot(color="blue", outlier.shape = 9, outlier.size = 2, outlier.color = "blue") + labs(title="Entire West Coast November 2016 Boxplot") + scale_x_continuous(breaks=seq(500, 4000, 500))
+```
+The price difference between the two regions is apparent, since the East coast average monthly rental price in November 2010 is 1370 a month, with the interquartile range ranging from 1082 to 1598, which is considerably lower than the 2010 data from the West coast. For the month of November 2016 in the East coast, the average monthly rent is 1498, with a interquartile range comprising of 1170 to 1765, which is yet again lower than the West's 2016 numbers.
+
+```{r, figures-side6, fig.show="hold", out.width="50%"}
+ggplot(eastcoast_annualClean, aes(x=November.2010)) + geom_boxplot(color="red", outlier.shape = 9, outlier.size = 2, outlier.color = "red") + labs(title="Entire East Coast November 2010 Boxplot") + scale_x_continuous(breaks=seq(500, 4000, 500))	
+ggplot(eastcoast_annualClean, aes(x=November.2016)) + geom_boxplot(color="red", outlier.shape = 9, outlier.size = 2, outlier.color = "red") + labs(title="Entire East Coast November 2016 Boxplot") + scale_x_continuous(breaks=seq(500, 4000, 500))	
+```
+
+# T-Test Results
+
+Now knowing that the West Coast easily costed around 200 to 300 dollars more than the East Coast a month, the last question to answer, to reassure that the West coast region costs more on average, is whether or not there was overlapping in the means. This being done by using t-tests on the variables November 2010 and the variable November 2016. The t-test was set at two different intervals one being at 80 and the other being at 99 percent. For the time variable of November 2010 at an 80 percent confidence interval the range spanned from 1515 to 1553 for the West coast and ranged from 1362 to 1378 for the East coast. In 2016, still at 80 percent, the West coast had a range of 1798 to 1849 and the East with a range from 1489 to 1508. When setting the confidence interval at 99 percent the West has a range of 1497 to 1571 for 2010 and 1771 to 1876 for the year 2016. The East coast had a range from 1354 to 1386 for 2010 and a span of 1480 to 1517 for 2016. The results from the t-test support the conclusion that the West Coast had a higher average monthly rental price, and never had any overlapping at the 80 or 99 percent confidence intervals of the t-tests with a difference again of roughly 200 to 300 dollars a month.
+
+
+
+```{r, echo = FALSE}
+# T Test of First and Last Month of East and  West Coast
+loadPkg("BSDA") # for z.test
+west2010_80 = t.test(x=westcoast_annualClean$November.2010, conf.level = 0.80)
+west2010_80
+west2016_80 = t.test(x=westcoast_annualClean$November.2016, conf.level = 0.80)
+west2016_80
+
+west2010_99 = t.test(x=westcoast_annualClean$November.2010, conf.level = 0.99)
+west2010_99
+west2016_99 = t.test(x=westcoast_annualClean$November.2016, conf.level = 0.99)
+west2016_99
+
+east2010_80 = t.test(x=eastcoast_annualClean$November.2010, conf.level = 0.80)
+east2010_80
+east2016_80 = t.test(x=eastcoast_annualClean$November.2016, conf.level = 0.80)
+east2016_80
+
+east2010_99 = t.test(x=eastcoast_annualClean$November.2010, conf.level = 0.99)
+east2010_99
+east2016_99 = t.test(x=eastcoast_annualClean$November.2016, conf.level = 0.99)
+east2016_99
+```
+
+```{r, results='hide', echo = FALSE}
+#This is the Break in the Code, EvW to COI
+```
+
+```{r, results='hide', echo = FALSE}
+zillow_prices = data.frame(read.csv("price.csv"))
+zillow_focus = zillow_prices[c(1:5,7,13,17,23,24,26,113,162),]
+zillow_focus = zillow_focus[c(-1,-3,-4,-5,-6)]
+zillow_focus
+```
+
+```{r, results='hide', echo = FALSE}
+rownames(zillow_focus) = zillow_focus$City
+zillow_focus = zillow_focus[c(-1)]
+zillow_focus = as.data.frame(t(zillow_focus))
+names(zillow_focus)<-str_replace_all(names(zillow_focus), c(" " = "" , "," = ""))
+head(zillow_focus)
+str(zillow_focus)
+```
+
+```{r, results='hide', echo = FALSE}
+zillow_focus <- cbind(Date = rownames(zillow_focus), zillow_focus)
+rownames(zillow_focus) <- 1:nrow(zillow_focus)
+head(zillow_focus)
+```
+
+```{r, results='hide', echo = FALSE}
+zillow_focus_test = zillow_focus
+zillow_focus_test$Date <- str_replace_all(zillow_focus_test$Date, "[.]", " ")
+zillow_focus_test$Month <- str_extract(zillow_focus_test$Date, "(\\w+)")
+zillow_focus_test$Year <- str_extract(zillow_focus_test$Date, "\\w+$")
+tmp_date = paste(match(zillow_focus_test$Month, month.name), zillow_focus_test$Year, sep="/")
+tmp_date = paste("01", tmp_date, sep="/")
+tmp_date = as.Date(tmp_date, "%d/%m/%Y")
+zillow_focus$Date <- tmp_date
+head(zillow_focus)
+str(zillow_focus)
+```
+
+```{r, results='hide', echo = FALSE}
+zillow_total = zillow_focus
+zillow_total$Total <- rowSums(zillow_total[3:14])
+head(zillow_total)
+```
+
+```{r, eval=FALSE, echo = FALSE}
+ggplot(zillow_total, aes(x=Date, y=Total)) + geom_point() + geom_line() + labs(x="Time", y="Total Rent Prices", title="Plot of City Rent Change over Time")
+```
+
+```{r, results='hide', echo = FALSE}
+zillow_melt <- melt(zillow_focus, id = "Date")
+names(zillow_melt)[2] <- "City"
+names(zillow_melt)[3] <- "Prices"
+head(zillow_melt)
+```
+
+```{r, eval=FALSE, echo = FALSE}
+ggplot(zillow_melt, aes(x=Prices, na.rm=TRUE)) + geom_histogram(binwidth=300)
+ggplot(zillow_melt, aes(x=Prices, na.rm=TRUE)) + geom_boxplot()
+summary(zillow_melt$Prices)
+```
+
+# Cities of Interest
+While our dataset looked at all of the city codes in the United States, it also allows us to dig deeper. We picked multiple cities of interest in order to analyze the dataset at a more personal level. Our cities of interest are NYC (Queens) (with only data from December 2011 onwards), LA, PA, Houston (Harris), Chicago (Cook), Dallas, Las Vegas, San Fran, Detroit (Wayne), Roanoke, Richmond, District of Columbia, Baltimore, Seattle(King). We picked these cities off of multiple metrics, their population, their closeness and significance to Virginia and D.C., and their significance in respect to the rent/housing events in the time period of 2011 to 2017.
+
+### NYC and Missing Data
+For example, NYC ranked as the highest population city code in the United States, which comes to no surprise. Unfortunately, the data for NYC had missing values before 2012, which was one of the limitations of the data. Not all the city codes were covered equally, and there were a few areas that had a lot of missing data points. Still, the data was mostly complete, as only 1 out of the 12 specifically selected cities of interest had missing values. For New York City, this could be a point of interest for future analysis, either to try and supplement the data with more NYC, or make separate plots/analyze these cities from only 2012 and onwards to try and draw more conclusions from the dataset. 
+
+
+```{r}
+ggplot(zillow_melt, aes(x=Date, y=Prices, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Rent Price", title="Plot of City Rent Prices over Time")
+```
+
+
+### Detroit, in the Context of Our Problem and in Time
+On the other hand, cities like Detroit and San Francisco were also selected for their significance at the time. Detroit went through the largest municipal bankruptcy ever seen in the United States in 2013 (Davey & Walsh, 2013). With an estimated debt between 18 and 20 billion dollars, the city had been steadily shrinking in population since the 20th century, and parts of the city became abandoned. Due to these facts, it was expected that the median would fall over time from 2011 to 2017. This was somewhat verified by the time series plots themselves, as Detroit would consistently be at the bottom of the graphs.
+
+
+```{r, results='hide', echo = FALSE}
+zillow_change <- as.data.frame(lapply(zillow_focus[2:14], diff, lag=1))
+zillow_change$Date <- zillow_focus$Date[2:75]
+zillow_change <- zillow_change %>% dplyr::select(Date, everything())
+head(zillow_change)
+```
+
+```{r}
+zillow_cmelt <- melt(zillow_change, id = "Date")
+names(zillow_cmelt)[2] <- "City"
+names(zillow_cmelt)[3] <- "PriceChange"
+ggplot(zillow_cmelt, aes(x=Date, y=PriceChange, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Price Change", title="Plot of City Rent Change over Time")
+```
+
+```{r, results='hide', echo = FALSE}
+zillow_cumulative <- as.data.frame(cumsum(zillow_change[2:14]))
+zillow_cumulative$Date <- zillow_focus$Date[2:75]
+zillow_cumulative <- zillow_cumulative %>% dplyr::select(Date, everything())
+head(zillow_cumulative)
+```
+
+```{r}
+zillow_cumumelt <- melt(zillow_cumulative, id = "Date")
+names(zillow_cumumelt)[2] <- "City"
+names(zillow_cumumelt)[3] <- "CumulativePriceChange"
+ggplot(zillow_cumumelt, aes(x=Date, y=CumulativePriceChange, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Cumulative Change", title="Plot of Cumulative City Rent Change over Time")
+```
+
+
+### San Francisco, in the Context of Our Problem
+San Francisco, on the other hand, had been dealing with a different problem. At the time, they were ranked among the cities with the highest wealth disparities, and now in 2022, they rank among the top 3. This gap in income inequality since 1999 can also be seen in the rising housing costs in the Bay Area (Karlinsky & Wang, 2021).  Likewise, they were going through available public housing issues, as the new jobs opportunities available in San Francisco rapidly out-scaled the available housing due to a scarcity of new buildings. This, combined with the wealth disparity, could possibly have caused bidding wars between the wealthy surrounding the scarce housing, and elevated the prices for all. This is speculation, but from the graphs, it can be seen that San Francisco had the highest prices and proportional change out of the 12 cities by the end of the series, and the second highest cumulative proportional change, only losing out to another west coast city.
+
+
+```{r, results='hide', echo = FALSE}
+zillow_proportion <- zillow_change[2:14]/zillow_focus[c(2:75), 2:14]*100
+zillow_proportion$Date <- zillow_focus$Date[2:75]
+zillow_proportion <- zillow_proportion %>% dplyr::select(Date, everything())
+head(zillow_proportion)
+```
+
+```{r}
+zillow_pmelt <- melt(zillow_proportion, id = "Date")
+names(zillow_pmelt)[2] <- "City"
+names(zillow_pmelt)[3] <- "ProportionChange"
+ggplot(zillow_pmelt, aes(x=Date, y=ProportionChange, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Proportional Change", title="Plot of City Rent Change over Time")
+```
+
+```{r, results='hide', echo = FALSE}
+zillow_pdrop <- zillow_proportion[3:14]
+zillow_pcumulative <- as.data.frame(cumsum(zillow_pdrop))
+zillow_pcumulative$Date <- zillow_focus$Date[2:75]
+zillow_pcumulative <- zillow_pcumulative %>% dplyr::select(Date, everything())
+head(zillow_pcumulative)
+```
+
+```{r}
+zillow_pcumumelt <- melt(zillow_pcumulative, id = "Date")
+names(zillow_pcumumelt)[2] <- "City"
+names(zillow_pcumumelt)[3] <- "CumulativeProportionChange"
+ggplot(zillow_pcumumelt, aes(x=Date, y=CumulativeProportionChange, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Cumu. Prop. Change", title="Plot of Cumulative City Rent Change over Time")
+```
+
+
+## SMART Questions and Our Dataset
+We developed our SMART questions to best use our dataset, to look at the average dollar change across the states and cities. In the same vein of thought, we thought it would be apt to take a deeper look at average change in the cities of interest, taking into account our time constraints.
+
+### General EDA
+Before beginning our initial EDA, our focus was to track the average change, and by taking this change as a percent proportion of the original rental prices over the months, we believed it would be the most comparable metric to look at from city code to city code. Here, we took a quick histogram of the distribution of proportional changes. The proportional changes over time look pretty normal taken together as a whole, with maybe a slight right skew, which makes sense as we would guess that rent prices should generally increase over time with inflation and what not. Remember, these changes are in percentages. On the boxplot, there are outliers on both sides, which matches what we see in the histogram. We also have our measures of variance and qqplot as well.
+
+
+```{r, results="markup"}
+ggplot(zillow_pmelt, aes(x=ProportionChange, na.rm=TRUE)) + geom_histogram() + labs(x = "Proportional Change in Percentages")
+ggplot(zillow_pmelt, aes(x=ProportionChange, na.rm=TRUE)) + geom_boxplot()
+qqnorm(zillow_pmelt$ProportionChange)
+summary(zillow_pmelt$ProportionChange)
+var(zillow_pmelt$ProportionChange, na.rm=TRUE)
+sd(zillow_pmelt$ProportionChange, na.rm=TRUE)
+```
+
+
+### ANOVA Test and Results with Post Hoc
+Finally, to check if the average proportional change of the cities were different from one another, we used an anova test with the average proportional changes against each other. Since we have a p-value less than our alpha, there were significant differences in changes, and thus, we looked at the Post-hoc Tukey HSD as well. The pairs that have significantly different average proportional changes are [Detroit-LosAngeles], [Roanoke-LosAngeles], [SanFrancisco-Chicago], [Seattle-Chicago], [Richmond-Chicago], [Detroit-Houston], [Seattle-Philadelphia], [SanFrancisco-LasVegas], [Seattle-LasVegas], [Richmond-LasVegas], [Detroit-SanFrancisco], [Roanoke-SanFrancisco], [Seattle-Detroit], [Washington-Detroit], [Richmond-Detroit], [Baltimore-Seattle], [Roanoke-Seattle], and finally, [Roanoke-Richmond]. From this ANOVA test, we found that we had to reject our null hypothesis that all average proportional changes of the city were the same.
+
+```{r, fig.align="center", fig.width = 10, fig.height=5}
+zillow_prodrop = zillow_proportion[-2]
+zillow_pdmelt <- melt(zillow_prodrop, id = "Date")
+names(zillow_pdmelt)[2] <- "City"
+names(zillow_pdmelt)[3] <- "ProportionChange"
+ggplot(zillow_pdmelt, aes(x=City, y=ProportionChange, color=City, na.rm=TRUE)) + geom_boxplot(outlier.shape=2, outlier.size=1)
+```
+
+```{r, results="markup"}
+pm_anova = aov(zillow_pdmelt$ProportionChange ~ zillow_pdmelt$City)
+summary(pm_anova)
+```
+
+```{r, results='hide', echo = FALSE}
+tukeyAoV <- TukeyHSD(pm_anova)
+tukeyAoV
+```
+
+
+## Sketching our conclusions, and Future possible avenues
+From our plots and tests, we can see that it is very likely that there are differences in the rental price change in different countries, and thus, opens the possibility of useful predictive modeling to project where our past information could lead us. We have answered our original SMART questions in our time frame with our limited resources, and took into account the possible biases and constraints. And from the initial plots and EDA, we can see the existence of unique cities like San Francisco and NYC that we will account for in our future models.
+
+
+### APA Citations
+
+Davey, M., &amp; Walsh, M. W. (2013, July 18). Billions in debt, Detroit tumbles into insolvency. The New York Times. Retrieved November 1, 2022, from https://www.nytimes.com/2013/07/19/us/detroit-files-for-bankruptcy.html
+
+
+Karlinsky, S., &amp; Wang, K. (2021, April 1). What it will really take to create an affordable Bay Area - Spur. What It Will Really Take to Create an Affordable Bay Area. Retrieved November 2, 2022, from https://www.spur.org/sites/default/files/2021-05/SPUR_What_It_Will_Really_Take_To_Create_An_Affordable_Bay_Area_Report.pdf
+
+```{r, results='hide', echo = FALSE}
+#This is the Break in the Code, COI to TP
+```
+
+## State wise countplot  
+```{r, results='markup', fig.align="center", fig.width = 10, fig.height=5}
+ggplot(zillow, aes(x=State)) + geom_bar(colour="blue", fill="purple", alpha=0.6)
+```
+
+## Time-series plot for top 10 cities  
+```{r, results='markup', fig.align="center", fig.width = 12, fig.height=5}
+num_city = 10
+values=head(zillow, num_city, )
+values=data.frame(t(as.matrix(values[,7:81])))
+colnames(values)=zillow[1:num_city,2]
+
+date = seq(as.Date("2010/11/01"), as.Date("2017/01/31"), "month")
+date = as.yearmon(date)
+ts=zoo(values,order.by = date)
+values=fortify(ts)
+values$Index=as.Date(values$Index)
+
+autoplot(ts,facets = NULL)+ geom_point(size=0.5) +
+  theme_minimal()+
+  labs(x="Time",y="Price")
+
+```
+
+## Pricing Distribution for California (Box plots)
+```{r, results='markup', fig.align="center", fig.width = 10, fig.height=5}
+price = gather(data = zillow, "Month", "Price", 7:81, factor_key = T)
+
+ggplot(price[price$State == "CA" & !is.na(price$Metro),]) +
+  geom_boxplot(aes(x = fct_rev(Metro), 
+                   y = as.numeric(Price)), fill="#FF9999", color="#56B4E9", outlier.size = 0.5) +
+  labs(x = "Metro Area", y = "Price", #note these are opposite because I use coord_flip to flip the axes
+       colour = "#E0E0E0") +
+  coord_flip()
+
+```
+
+## Pricing Distribution for Philadelphia (Box plots)
+```{r, results='markup', fig.align="center", fig.width = 10, fig.height=5}
+price = gather(data = zillow, "Month", "Price", 7:81, factor_key = T)
+
+ggplot(price[price$State == "PA" & !is.na(price$Metro),]) +
+  geom_boxplot(aes(x = fct_rev(Metro), 
+                   y = as.numeric(Price)), fill="#9999CC", color="#66CC99", outlier.size = 0.5) +
+  labs(x = "Metro Area", y = "Price", #note these are opposite because I use coord_flip to flip the axes
+       colour = "#E0E0E0") +
+  coord_flip()
+
+```
+
+## Dallas county rent prices (point plot across time)
+```{r, results='markup', fig.align="center", fig.width = 10, fig.height = 7}
+# price
+ggplot(price[price$County == "Dallas" & !is.na(price$City),], 
+               aes(y = fct_rev(City), x = Price)) +
+  labs(title = "Zillow | Dallas County Rent Prices",
+       subtitle = "2010 - 2017", 
+       x = "Price", y = "Dallas County", 
+       colour = "Time") +
+  geom_point(shape = 20, alpha = 0.4, size = 3, aes(color = Month)) +
+  scale_color_discrete(l = 45, h = c(30, 330)) 
+
+```
+
+## Los Angeles county rent prices (point plot across time)
+```{r, results='markup', fig.align="center", fig.width = 10, fig.height = 15}
+
+ggplot(price[price$County == "Los Angeles" & !is.na(price$City),], 
+               aes(y = fct_rev(City), x = Price)) +
+  labs(title = "Zillow | Los Angeles County Rent Prices",
+       subtitle = "2010 - 2017", 
+       x = "Price", y = "LA County", 
+       colour = "Time") +
+  geom_point(shape = 16, alpha = 0.4, size = 3, aes(color = Month)) +
+  scale_colour_viridis_d()
+  # scale_colour_gradientn(colours=rainbow(4))
+
+```
+
+## Average rent pricing with minimum maximum deviation
+```{r, results='markup', fig.align="center", fig.width = 10, fig.height = 8}
+# Create variable of numeric year
+price$Year = as.character(price$Month)
+price$Year = as.numeric(substr(price$Month, nchar(as.character(price$Month)) - 3, nchar(as.character(price$Month))))
+
+# Calculate range for each state, by year
+states = price[!is.na(price$State),] %>%
+  group_by(State, Year) %>%
+  summarise(Mean = round(mean(Price),0),
+            Min = min(Price),
+            Max = max(Price)) 
+
+# Plot change over time, by state.
+ggplot(states[!is.na(states$Mean),], 
+                aes(x = fct_rev(State),
+                    y = as.numeric(Mean))) +
+  labs(title = "Zillow | Mean US Rent Prices",
+       subtitle = "2010 - 2017", 
+       x = "States", y = "Average Price", 
+       colour = "#E0E0E0") +
+  geom_point(shape = 20, alpha = 0.8, size = 5, aes(color = Year)) +
+  scale_color_continuous(aes(guide = ""), low = "black", high = "purple") + 
+  guides(fill = guide_colourbar(barwidth = 0.7, barheight = 15)) +
+  coord_flip() 
+
+```
+
+## Hex plot with number of counties for top 5 cities
+```{r, results='markup', fig.align="center", fig.width = 10, fig.height=12}
+
+num_city = 5
+values=head(zillow, num_city, )
+values=data.frame(t(as.matrix(values[,7:81])))
+colnames(values)=zillow[1:num_city,2]
+
+date = seq(as.Date("2010/11/01"), as.Date("2017/01/31"), "month")
+date = as.yearmon(date)
+ts=zoo(values,order.by = date)
+values=fortify(ts)
+values$Index=as.Date(values$Index)
+
+autoplot(ts,facets = NULL)+ geom_hex(size=1.5, alpha=0.7) + scale_fill_viridis_c() + 
+  guides(fill = guide_colourbar(barwidth = 0.7, barheight = 15)) +
+  theme_minimal()+ 
+  labs(x="Time",y="Price")
+```
+
+
+
+

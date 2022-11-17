@@ -1,0 +1,229 @@
+---
+title: "6101 Project 1"
+author: Jeffrey Hu, Aaron Rock, Sanchit Vijay
+date: 9/27/22 to 10/27/22
+output:
+  html_document:
+    code_folding: hide
+    number_sections: false
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
+---
+
+```{r init, include=FALSE}
+# some of common options (and the defaults) are: 
+# include=T, eval=T, echo=T, results='hide'/'asis'/'markup',..., collapse=F, warning=T, message=T, error=T, cache=T, fig.width=6, fig.height=4, fig.dim=c(6,4) #inches, fig.align='left'/'center','right', 
+# Make sure that install.packages("matrixStats"), install.packages("reshape2"), install.packages("reshape") are installed
+
+library(ezids)
+library(ggplot2)
+library(tidyverse)
+library(MASS)
+library(reshape)
+library(dplyr)
+library(matrixStats)
+library(zoo)
+library(ggfortify)
+library(reshape2)
+library(hexbin)
+# knitr::opts_chunk$set(warning = F, results = "markup", message = F)
+knitr::opts_chunk$set(warning = F, results = "hide", message = F)
+options(scientific=T, digits = 3) 
+# options(scipen=9, digits = 3) 
+# ‘scipen’: integer. A penalty to be applied when deciding to print numeric values in fixed or exponential notation.  Positive values bias towards fixed and negative towards scientific notation: fixed notation will be preferred unless it is more than ‘scipen’ digits wider.
+# use scipen=999 to prevent scientific notation at all times
+```
+
+```{r, results='hide'}
+zillow_prices = data.frame(read.csv("price.csv"))
+zillow_focus = zillow_prices[c(1:5,7,13,17,23,24,26,113,162),]
+zillow_focus = zillow_focus[c(-1,-3,-4,-5,-6)]
+zillow_focus
+```
+
+```{r, results='hide'}
+rownames(zillow_focus) = zillow_focus$City
+zillow_focus = zillow_focus[c(-1)]
+zillow_focus = as.data.frame(t(zillow_focus))
+names(zillow_focus)<-str_replace_all(names(zillow_focus), c(" " = "" , "," = ""))
+head(zillow_focus)
+str(zillow_focus)
+```
+
+```{r, results='hide'}
+zillow_focus <- cbind(Date = rownames(zillow_focus), zillow_focus)
+rownames(zillow_focus) <- 1:nrow(zillow_focus)
+head(zillow_focus)
+```
+
+```{r, results='hide'}
+zillow_focus_test = zillow_focus
+zillow_focus_test$Date <- str_replace_all(zillow_focus_test$Date, "[.]", " ")
+zillow_focus_test$Month <- str_extract(zillow_focus_test$Date, "(\\w+)")
+zillow_focus_test$Year <- str_extract(zillow_focus_test$Date, "\\w+$")
+tmp_date = paste(match(zillow_focus_test$Month, month.name), zillow_focus_test$Year, sep="/")
+tmp_date = paste("01", tmp_date, sep="/")
+tmp_date = as.Date(tmp_date, "%d/%m/%Y")
+zillow_focus$Date <- tmp_date
+head(zillow_focus)
+str(zillow_focus)
+```
+
+```{r, results='hide'}
+zillow_total = zillow_focus
+zillow_total$Total <- rowSums(zillow_total[3:14])
+head(zillow_total)
+```
+
+```{r, eval=FALSE}
+ggplot(zillow_total, aes(x=Date, y=Total)) + geom_point() + geom_line() + labs(x="Time", y="Total Rent Prices", title="Plot of City Rent Change over Time")
+```
+
+```{r, results='hide'}
+zillow_melt <- melt(zillow_focus, id = "Date")
+names(zillow_melt)[2] <- "City"
+names(zillow_melt)[3] <- "Prices"
+head(zillow_melt)
+```
+
+```{r, eval=FALSE}
+ggplot(zillow_melt, aes(x=Prices, na.rm=TRUE)) + geom_histogram(binwidth=300)
+ggplot(zillow_melt, aes(x=Prices, na.rm=TRUE)) + geom_boxplot()
+summary(zillow_melt$Prices)
+```
+
+## Cities of Interest
+While our dataset looked at all of the city codes in the United States, it also allows us to dig deeper. We picked multiple cities of interest in order to analyze the dataset at a more personal level. Our cities of interest are NYC (Queens) (with only data from December 2011 onwards), LA, PA, Houston (Harris), Chicago (Cook), Dallas, Las Vegas, San Fran, Detroit (Wayne), Roanoke, Richmond, District of Columbia, Baltimore, Seattle(King). We picked these cities off of multiple metrics, their population, their closeness and significance to Virginia and D.C., and their significance in respect to the rent/housing events in the time period of 2011 to 2017.
+
+## Data Gathering and Possible Biases, Original Analytics
+The information was gathered from the Zillow database of more than 100 million homes at the time. The data points are median terms given for each month over the time period and attributed to each city code. This can be a cause of bias when we are trying to look at the total population of rent prices over the United States, as first of all, city codes do not evenly represent the entire US. Because the data is only from Zillow, it may under or over represent some areas, or give misleading points, depending on how commonly Zillow is used in those areas. Likewise, the dataset of medians is derived from a machine learning algorithm, which can have its own errors. Because this dataset is showing the median values over time, the analysis of median vs mean as the better center of measure in the context of rent prices has most likely already been completed on the data compiler's side. This indicates that the original data set had already calculated the measures of centers along the time frame for us.
+
+## NYC and Missing Data
+For example, NYC ranked as the highest population city code in the United States, which comes to no surprise. Unfortunately, the data for NYC had missing values before 2012, which was one of the limitations of the data. Not all the city codes were covered equally, and there were a few areas that had a lot of missing data points. Still, the data was mostly complete, as only 1 out of the 12 specifically selected cities of interest had missing values. For New York City, this could be a point of interest for future analysis, either to try and supplement the data with more NYC, or make separate plots/analyze these cities from only 2012 and onwards to try and draw more conclusions from the dataset. 
+
+
+```{r}
+ggplot(zillow_melt, aes(x=Date, y=Prices, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Rent Price", title="Plot of City Rent Prices over Time")
+```
+
+
+## Detroit, in the Context of Our Problem and in Time
+On the other hand, cities like Detroit and San Francisco were also selected for their significance at the time. Detroit went through the largest municipal bankruptcy ever seen in the United States in 2013 (Davey & Walsh, 2013). With an estimated debt between 18 and 20 billion dollars, the city had been steadily shrinking in population since the 20th century, and parts of the city became abandoned. Due to these facts, it was expected that the median would fall over time from 2011 to 2017. This was somewhat verified by the time series plots themselves, as Detroit would consistently be at the bottom of the graphs.
+
+
+```{r, results='hide'}
+zillow_change <- as.data.frame(lapply(zillow_focus[2:14], diff, lag=1))
+zillow_change$Date <- zillow_focus$Date[2:75]
+zillow_change <- zillow_change %>% dplyr::select(Date, everything())
+head(zillow_change)
+```
+
+```{r}
+zillow_cmelt <- melt(zillow_change, id = "Date")
+names(zillow_cmelt)[2] <- "City"
+names(zillow_cmelt)[3] <- "PriceChange"
+ggplot(zillow_cmelt, aes(x=Date, y=PriceChange, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Price Change", title="Plot of City Rent Change over Time")
+```
+
+```{r, results='hide'}
+zillow_cumulative <- as.data.frame(cumsum(zillow_change[2:14]))
+zillow_cumulative$Date <- zillow_focus$Date[2:75]
+zillow_cumulative <- zillow_cumulative %>% dplyr::select(Date, everything())
+head(zillow_cumulative)
+```
+
+```{r}
+zillow_cumumelt <- melt(zillow_cumulative, id = "Date")
+names(zillow_cumumelt)[2] <- "City"
+names(zillow_cumumelt)[3] <- "CumulativePriceChange"
+ggplot(zillow_cumumelt, aes(x=Date, y=CumulativePriceChange, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Cumulative Change", title="Plot of Cumulative City Rent Change over Time")
+```
+
+
+## San Francisco, in the Context of Our Problem
+San Francisco, on the other hand, had been dealing with a different problem. At the time, they were ranked among the cities with the highest wealth disparities, and now in 2022, they rank among the top 3. This gap in income inequality since 1999 can also be seen in the rising housing costs in the Bay Area (Karlinsky & Wang, 2021).  Likewise, they were going through available public housing issues, as the new jobs opportunities available in San Francisco rapidly out-scaled the available housing due to a scarcity of new buildings. This, combined with the wealth disparity, could possibly have caused bidding wars between the wealthy surrounding the scarce housing, and elevated the prices for all. This is speculation, but from the graphs, it can be seen that San Francisco had the highest prices and proportional change out of the 12 cities by the end of the series, and the second highest cumulative proportional change, only losing out to another west coast city.
+
+
+```{r, results='hide'}
+zillow_proportion <- zillow_change[2:14]/zillow_focus[c(2:75), 2:14]*100
+zillow_proportion$Date <- zillow_focus$Date[2:75]
+zillow_proportion <- zillow_proportion %>% dplyr::select(Date, everything())
+head(zillow_proportion)
+```
+
+```{r}
+zillow_pmelt <- melt(zillow_proportion, id = "Date")
+names(zillow_pmelt)[2] <- "City"
+names(zillow_pmelt)[3] <- "ProportionChange"
+ggplot(zillow_pmelt, aes(x=Date, y=ProportionChange, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Proportional Change", title="Plot of City Rent Change over Time")
+```
+
+```{r, results='hide'}
+zillow_pdrop <- zillow_proportion[3:14]
+zillow_pcumulative <- as.data.frame(cumsum(zillow_pdrop))
+zillow_pcumulative$Date <- zillow_focus$Date[2:75]
+zillow_pcumulative <- zillow_pcumulative %>% dplyr::select(Date, everything())
+head(zillow_pcumulative)
+```
+
+```{r}
+zillow_pcumumelt <- melt(zillow_pcumulative, id = "Date")
+names(zillow_pcumumelt)[2] <- "City"
+names(zillow_pcumumelt)[3] <- "CumulativeProportionChange"
+ggplot(zillow_pcumumelt, aes(x=Date, y=CumulativeProportionChange, group=City, color=City, na.rm=TRUE)) + geom_point() + geom_line() + labs(x="Time", y="Cumu. Prop. Change", title="Plot of Cumulative City Rent Change over Time")
+```
+
+
+## SMART Questions and Our Dataset
+We developed our SMART questions to best use our dataset, to look at the average dollar change across the states and cities. In the same vein of thought, we thought it would be apt to take a deeper look at average change in the cities of interest, taking into account our time constraints.
+
+## General EDA
+Before beginning our initial EDA, our focus was to track the average change, and by taking this change as a percent proportion of the original rental prices over the months, we believed it would be the most comparable metric to look at from city code to city code. Here, we took a quick histogram of the distribution of proportional changes. The proportional changes over time look pretty normal taken together as a whole, with maybe a slight right skew, which makes sense as we would guess that rent prices should generally increase over time with inflation and what not. Remember, these changes are in percentages. On the boxplot, there are outliers on both sides, which matches what we see in the histogram. We also have our measures of variance and qqplot as well.
+
+
+```{r, results="markup"}
+ggplot(zillow_pmelt, aes(x=ProportionChange, na.rm=TRUE)) + geom_histogram() + labs(x = "Proportional Change in Percentages")
+ggplot(zillow_pmelt, aes(x=ProportionChange, na.rm=TRUE)) + geom_boxplot()
+qqnorm(zillow_pmelt$ProportionChange)
+summary(zillow_pmelt$ProportionChange)
+var(zillow_pmelt$ProportionChange, na.rm=TRUE)
+sd(zillow_pmelt$ProportionChange, na.rm=TRUE)
+```
+
+
+## ANOVA Test and Results with Post Hoc
+Finally, to check if the average proportional change of the cities were different from one another, we used an anova test with the average proportional changes against each other. Since we have a p-value less than our alpha, there were significant differences in changes, and thus, we looked at the Post-hoc Tukey HSD as well. The pairs that have significantly different average proportional changes are [Detroit-LosAngeles], [Roanoke-LosAngeles], [SanFrancisco-Chicago], [Seattle-Chicago], [Richmond-Chicago], [Detroit-Houston], [Seattle-Philadelphia], [SanFrancisco-LasVegas], [Seattle-LasVegas], [Richmond-LasVegas], [Detroit-SanFrancisco], [Roanoke-SanFrancisco], [Seattle-Detroit], [Washington-Detroit], [Richmond-Detroit], [Baltimore-Seattle], [Roanoke-Seattle], and finally, [Roanoke-Richmond]. From this ANOVA test, we found that we had to reject our null hypothesis that all average proportional changes of the city were the same.
+
+```{r, fig.align="center", fig.width = 10, fig.height=5}
+zillow_prodrop = zillow_proportion[-2]
+zillow_pdmelt <- melt(zillow_prodrop, id = "Date")
+names(zillow_pdmelt)[2] <- "City"
+names(zillow_pdmelt)[3] <- "ProportionChange"
+ggplot(zillow_pdmelt, aes(x=City, y=ProportionChange, color=City, na.rm=TRUE)) + geom_boxplot(outlier.shape=2, outlier.size=1)
+```
+
+```{r, results="markup"}
+pm_anova = aov(zillow_pdmelt$ProportionChange ~ zillow_pdmelt$City)
+summary(pm_anova)
+```
+
+```{r, results='hide'}
+tukeyAoV <- TukeyHSD(pm_anova)
+tukeyAoV
+```
+
+
+## Sketching our conclusions, and Future possible avenues
+From our plots and tests, we can see that it is very likely that there are differences in the rental price change in different countries, and thus, opens the possibility of useful predictive modeling to project where our past information could lead us. We have answered our original SMART questions in our time frame with our limited resources, and took into account the possible biases and constraints. And from the initial plots and EDA, we can see the existence of unique cities like San Francisco and NYC that we will account for in our future models.
+
+
+## APA Citations
+
+Davey, M., &amp; Walsh, M. W. (2013, July 18). Billions in debt, Detroit tumbles into insolvency. The New York Times. Retrieved November 1, 2022, from https://www.nytimes.com/2013/07/19/us/detroit-files-for-bankruptcy.html
+
+
+Karlinsky, S., &amp; Wang, K. (2021, April 1). What it will really take to create an affordable Bay Area - Spur. What It Will Really Take to Create an Affordable Bay Area. Retrieved November 2, 2022, from https://www.spur.org/sites/default/files/2021-05/SPUR_What_It_Will_Really_Take_To_Create_An_Affordable_Bay_Area_Report.pdf
