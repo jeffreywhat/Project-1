@@ -1,0 +1,808 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={6101 Project 1},
+  pdfauthor={Jeffrey Hu, Aaron Rock, Sanchit Vijay},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{6101 Project 1}
+\author{Jeffrey Hu, Aaron Rock, Sanchit Vijay}
+\date{9/27/22 to 10/27/22}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+\hypertarget{summary-paper-instructions}{%
+\subsection{Summary Paper
+Instructions}\label{summary-paper-instructions}}
+
+Write a roughly 10-page (definitely no more than 4000 words, charts do
+not count) summary of the research and EDA process of your project. The
+summary should be prepared in Rmarkdown and knitted into HTML. You may
+take some of the work in part II (such as graphs and results) to include
+here. They can overlap. You may also make modifications to your analysis
+based on feedback from your presentation. This summary is to be
+presented to your boss, your client, or to be submitted for publication
+in journals. Potential area of topics to address in this summary may
+include:  What do we know about this dataset?  What are the
+limitations of the dataset?  How was the information gathered?  What
+analysis has already been completed related to the content in your
+dataset?  How did the research you gathered contribute to your question
+development?  What additional information would be beneficial?  How
+did your question change, if at all, after Exploratory Data Analysis? 
+Based on EDA can you begin to sketch out an answer to your question? 
+References (APA style preferred)
+
+\hypertarget{load-the-file}{%
+\subsection{Load the file}\label{load-the-file}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_prices }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{read.csv}\NormalTok{(}\StringTok{"price.csv"}\NormalTok{))}
+\NormalTok{zillow\_focus }\OtherTok{=}\NormalTok{ zillow\_prices[}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{13}\NormalTok{,}\DecValTok{17}\NormalTok{,}\DecValTok{23}\NormalTok{,}\DecValTok{24}\NormalTok{,}\DecValTok{26}\NormalTok{,}\DecValTok{113}\NormalTok{,}\DecValTok{162}\NormalTok{),]}
+\NormalTok{zillow\_focus }\OtherTok{=}\NormalTok{ zillow\_focus[}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{4}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{,}\SpecialCharTok{{-}}\DecValTok{6}\NormalTok{)]}
+\NormalTok{zillow\_focus}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{clean-and-transpose}{%
+\subsection{Clean and Transpose}\label{clean-and-transpose}}
+
+Our cities of interest are NYC (Queens) (only data from December 2011
+Onwards), LA, PA, Houston (Harris), Chicago (Cook), Dallas, Las Vegas,
+San Fran, Detroit (Wayne), Roanoke, Richmond, District of Columbia,
+Baltimore, Seattle(King). Here, we clean data set and transpose the
+dates/cities
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{rownames}\NormalTok{(zillow\_focus) }\OtherTok{=}\NormalTok{ zillow\_focus}\SpecialCharTok{$}\NormalTok{City}
+\NormalTok{zillow\_focus }\OtherTok{=}\NormalTok{ zillow\_focus[}\FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{)]}
+\NormalTok{zillow\_focus }\OtherTok{=} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{t}\NormalTok{(zillow\_focus))}
+\FunctionTok{names}\NormalTok{(zillow\_focus)}\OtherTok{\textless{}{-}}\FunctionTok{str\_replace\_all}\NormalTok{(}\FunctionTok{names}\NormalTok{(zillow\_focus), }\FunctionTok{c}\NormalTok{(}\StringTok{" "} \OtherTok{=} \StringTok{""}\NormalTok{ , }\StringTok{","} \OtherTok{=} \StringTok{""}\NormalTok{))}
+\FunctionTok{head}\NormalTok{(zillow\_focus)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##               NewYork LosAngeles Chicago Houston Philadelphia LasVegas
+## November.2010      NA       2184    1563    1198         1092     1188
+## December.2010      NA       2184    1555    1199         1099     1183
+## January.2011       NA       2183    1547    1199         1094     1178
+## February.2011      NA       2188    1537    1200         1087     1177
+## March.2011         NA       2189    1526    1203         1080     1178
+## April.2011         NA       2189    1517    1205         1080     1179
+##               SanFrancisco Detroit Seattle Baltimore Washington Richmond
+## November.2010         3188     847    1746      1192       2174      892
+## December.2010         3207     844    1740      1195       2203      898
+## January.2011          3189     832    1736      1203       2241      900
+## February.2011         3127     820    1734      1210       2276      902
+## March.2011            3040     810    1730      1220       2303      902
+## April.2011            2970     806    1722      1228       2320      904
+##               Roanoke
+## November.2010    1065
+## December.2010    1067
+## January.2011     1062
+## February.2011    1060
+## March.2011       1059
+## April.2011       1066
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(zillow\_focus)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    75 obs. of  13 variables:
+##  $ NewYork     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ LosAngeles  : int  2184 2184 2183 2188 2189 2189 2188 2191 2189 2186 ...
+##  $ Chicago     : int  1563 1555 1547 1537 1526 1517 1507 1497 1493 1491 ...
+##  $ Houston     : int  1198 1199 1199 1200 1203 1205 1204 1199 1194 1190 ...
+##  $ Philadelphia: int  1092 1099 1094 1087 1080 1080 1083 1082 1082 1085 ...
+##  $ LasVegas    : int  1188 1183 1178 1177 1178 1179 1176 1170 1163 1158 ...
+##  $ SanFrancisco: int  3188 3207 3189 3127 3040 2970 2916 2879 2848 2848 ...
+##  $ Detroit     : int  847 844 832 820 810 806 802 800 797 796 ...
+##  $ Seattle     : int  1746 1740 1736 1734 1730 1722 1713 1709 1708 1706 ...
+##  $ Baltimore   : int  1192 1195 1203 1210 1220 1228 1233 1230 1223 1214 ...
+##  $ Washington  : int  2174 2203 2241 2276 2303 2320 2323 2318 2318 2322 ...
+##  $ Richmond    : int  892 898 900 902 902 904 909 917 933 951 ...
+##  $ Roanoke     : int  1065 1067 1062 1060 1059 1066 1070 1070 1062 1049 ...
+\end{verbatim}
+
+Turn date into a column
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_focus }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(}\AttributeTok{Date =} \FunctionTok{rownames}\NormalTok{(zillow\_focus), zillow\_focus)}
+\FunctionTok{rownames}\NormalTok{(zillow\_focus) }\OtherTok{\textless{}{-}} \DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(zillow\_focus)}
+\FunctionTok{head}\NormalTok{(zillow\_focus)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            Date NewYork LosAngeles Chicago Houston Philadelphia LasVegas
+## 1 November.2010      NA       2184    1563    1198         1092     1188
+## 2 December.2010      NA       2184    1555    1199         1099     1183
+## 3  January.2011      NA       2183    1547    1199         1094     1178
+## 4 February.2011      NA       2188    1537    1200         1087     1177
+## 5    March.2011      NA       2189    1526    1203         1080     1178
+## 6    April.2011      NA       2189    1517    1205         1080     1179
+##   SanFrancisco Detroit Seattle Baltimore Washington Richmond Roanoke
+## 1         3188     847    1746      1192       2174      892    1065
+## 2         3207     844    1740      1195       2203      898    1067
+## 3         3189     832    1736      1203       2241      900    1062
+## 4         3127     820    1734      1210       2276      902    1060
+## 5         3040     810    1730      1220       2303      902    1059
+## 6         2970     806    1722      1228       2320      904    1066
+\end{verbatim}
+
+\hypertarget{convert-the-date-column-from-chr-to-date-and-total}{%
+\subsection{Convert the Date column from chr to date, and
+Total}\label{convert-the-date-column-from-chr-to-date-and-total}}
+
+Here, we are converting strings to dates and to \%d/\%m/\%Y form with 01
+for \%d
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_focus\_test }\OtherTok{=}\NormalTok{ zillow\_focus}
+\NormalTok{zillow\_focus\_test}\SpecialCharTok{$}\NormalTok{Date }\OtherTok{\textless{}{-}} \FunctionTok{str\_replace\_all}\NormalTok{(zillow\_focus\_test}\SpecialCharTok{$}\NormalTok{Date, }\StringTok{"[.]"}\NormalTok{, }\StringTok{" "}\NormalTok{)}
+\NormalTok{zillow\_focus\_test}\SpecialCharTok{$}\NormalTok{Month }\OtherTok{\textless{}{-}} \FunctionTok{str\_extract}\NormalTok{(zillow\_focus\_test}\SpecialCharTok{$}\NormalTok{Date, }\StringTok{"(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{w+)"}\NormalTok{)}
+\NormalTok{zillow\_focus\_test}\SpecialCharTok{$}\NormalTok{Year }\OtherTok{\textless{}{-}} \FunctionTok{str\_extract}\NormalTok{(zillow\_focus\_test}\SpecialCharTok{$}\NormalTok{Date, }\StringTok{"}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{w+$"}\NormalTok{)}
+\NormalTok{tmp\_date }\OtherTok{=} \FunctionTok{paste}\NormalTok{(}\FunctionTok{match}\NormalTok{(zillow\_focus\_test}\SpecialCharTok{$}\NormalTok{Month, month.name), zillow\_focus\_test}\SpecialCharTok{$}\NormalTok{Year, }\AttributeTok{sep=}\StringTok{"/"}\NormalTok{)}
+\NormalTok{tmp\_date }\OtherTok{=} \FunctionTok{paste}\NormalTok{(}\StringTok{"01"}\NormalTok{, tmp\_date, }\AttributeTok{sep=}\StringTok{"/"}\NormalTok{)}
+\NormalTok{tmp\_date }\OtherTok{=} \FunctionTok{as.Date}\NormalTok{(tmp\_date, }\StringTok{"\%d/\%m/\%Y"}\NormalTok{)}
+\NormalTok{zillow\_focus}\SpecialCharTok{$}\NormalTok{Date }\OtherTok{\textless{}{-}}\NormalTok{ tmp\_date}
+\FunctionTok{head}\NormalTok{(zillow\_focus)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Date NewYork LosAngeles Chicago Houston Philadelphia LasVegas
+## 1 2010-11-01      NA       2184    1563    1198         1092     1188
+## 2 2010-12-01      NA       2184    1555    1199         1099     1183
+## 3 2011-01-01      NA       2183    1547    1199         1094     1178
+## 4 2011-02-01      NA       2188    1537    1200         1087     1177
+## 5 2011-03-01      NA       2189    1526    1203         1080     1178
+## 6 2011-04-01      NA       2189    1517    1205         1080     1179
+##   SanFrancisco Detroit Seattle Baltimore Washington Richmond Roanoke
+## 1         3188     847    1746      1192       2174      892    1065
+## 2         3207     844    1740      1195       2203      898    1067
+## 3         3189     832    1736      1203       2241      900    1062
+## 4         3127     820    1734      1210       2276      902    1060
+## 5         3040     810    1730      1220       2303      902    1059
+## 6         2970     806    1722      1228       2320      904    1066
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{str}\NormalTok{(zillow\_focus)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 'data.frame':    75 obs. of  14 variables:
+##  $ Date        : Date, format: "2010-11-01" "2010-12-01" ...
+##  $ NewYork     : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ LosAngeles  : int  2184 2184 2183 2188 2189 2189 2188 2191 2189 2186 ...
+##  $ Chicago     : int  1563 1555 1547 1537 1526 1517 1507 1497 1493 1491 ...
+##  $ Houston     : int  1198 1199 1199 1200 1203 1205 1204 1199 1194 1190 ...
+##  $ Philadelphia: int  1092 1099 1094 1087 1080 1080 1083 1082 1082 1085 ...
+##  $ LasVegas    : int  1188 1183 1178 1177 1178 1179 1176 1170 1163 1158 ...
+##  $ SanFrancisco: int  3188 3207 3189 3127 3040 2970 2916 2879 2848 2848 ...
+##  $ Detroit     : int  847 844 832 820 810 806 802 800 797 796 ...
+##  $ Seattle     : int  1746 1740 1736 1734 1730 1722 1713 1709 1708 1706 ...
+##  $ Baltimore   : int  1192 1195 1203 1210 1220 1228 1233 1230 1223 1214 ...
+##  $ Washington  : int  2174 2203 2241 2276 2303 2320 2323 2318 2318 2322 ...
+##  $ Richmond    : int  892 898 900 902 902 904 909 917 933 951 ...
+##  $ Roanoke     : int  1065 1067 1062 1060 1059 1066 1070 1070 1062 1049 ...
+\end{verbatim}
+
+Add a total column, not including New York (which has NAs)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_total }\OtherTok{=}\NormalTok{ zillow\_focus}
+\NormalTok{zillow\_total}\SpecialCharTok{$}\NormalTok{Total }\OtherTok{\textless{}{-}} \FunctionTok{rowSums}\NormalTok{(zillow\_total[}\DecValTok{3}\SpecialCharTok{:}\DecValTok{14}\NormalTok{])}
+\FunctionTok{head}\NormalTok{(zillow\_total)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Date NewYork LosAngeles Chicago Houston Philadelphia LasVegas
+## 1 2010-11-01      NA       2184    1563    1198         1092     1188
+## 2 2010-12-01      NA       2184    1555    1199         1099     1183
+## 3 2011-01-01      NA       2183    1547    1199         1094     1178
+## 4 2011-02-01      NA       2188    1537    1200         1087     1177
+## 5 2011-03-01      NA       2189    1526    1203         1080     1178
+## 6 2011-04-01      NA       2189    1517    1205         1080     1179
+##   SanFrancisco Detroit Seattle Baltimore Washington Richmond Roanoke Total
+## 1         3188     847    1746      1192       2174      892    1065 18329
+## 2         3207     844    1740      1195       2203      898    1067 18374
+## 3         3189     832    1736      1203       2241      900    1062 18364
+## 4         3127     820    1734      1210       2276      902    1060 18318
+## 5         3040     810    1730      1220       2303      902    1059 18240
+## 6         2970     806    1722      1228       2320      904    1066 18186
+\end{verbatim}
+
+\hypertarget{line-plot-of-total}{%
+\subsection{Line plot of total}\label{line-plot-of-total}}
+
+Line plots of time series, one with only time
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(zillow\_total, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Date, }\AttributeTok{y=}\NormalTok{Total)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Time"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Total Rent Prices"}\NormalTok{, }\AttributeTok{title=}\StringTok{"Plot of City Rent Change over Time"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\hypertarget{plots-of-the-cities-and-prices}{%
+\subsection{Plots of the Cities and
+Prices}\label{plots-of-the-cities-and-prices}}
+
+Melt the ggplot by the cities
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_melt }\OtherTok{\textless{}{-}} \FunctionTok{melt}\NormalTok{(zillow\_focus, }\AttributeTok{id =} \StringTok{"Date"}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(zillow\_melt)[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"City"}
+\FunctionTok{names}\NormalTok{(zillow\_melt)[}\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"Prices"}
+\FunctionTok{head}\NormalTok{(zillow\_melt)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Date    City Prices
+## 1 2010-11-01 NewYork     NA
+## 2 2010-12-01 NewYork     NA
+## 3 2011-01-01 NewYork     NA
+## 4 2011-02-01 NewYork     NA
+## 5 2011-03-01 NewYork     NA
+## 6 2011-04-01 NewYork     NA
+\end{verbatim}
+
+I'm not sure if histograms would be meaningful in the context of my
+part, but here's one of all the cities melted together, ignoring New
+York again. We can do more if you guys believe it's necessary. There is
+a huge skew because the bigger/more expensive cities chosen would have
+higher rent prices due to a difference in the cost of living. I'll also
+do the Mean/Median/Quartiles of the overall plots here.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(zillow\_melt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Prices, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_histogram}\NormalTok{(}\AttributeTok{binwidth=}\DecValTok{300}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(zillow\_melt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Prices, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_boxplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-8-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(zillow\_melt}\SpecialCharTok{$}\NormalTok{Prices)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##     743    1106    1319    1671    2210    4547      13
+\end{verbatim}
+
+Lines of the time series over their changes.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(zillow\_melt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Date, }\AttributeTok{y=}\NormalTok{Prices, }\AttributeTok{group=}\NormalTok{City, }\AttributeTok{color=}\NormalTok{City, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Time"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Rent Price"}\NormalTok{, }\AttributeTok{title=}\StringTok{"Plot of City Rent Prices over Time"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\hypertarget{first-order-change-plots}{%
+\subsection{First Order change plots}\label{first-order-change-plots}}
+
+Find the first order change, difference between each month
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_change }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{lapply}\NormalTok{(zillow\_focus[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{14}\NormalTok{], diff, }\AttributeTok{lag=}\DecValTok{1}\NormalTok{))}
+\NormalTok{zillow\_change}\SpecialCharTok{$}\NormalTok{Date }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_focus}\SpecialCharTok{$}\NormalTok{Date[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{75}\NormalTok{]}
+\NormalTok{zillow\_change }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_change }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Date, }\FunctionTok{everything}\NormalTok{())}
+\FunctionTok{head}\NormalTok{(zillow\_change)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Date NewYork LosAngeles Chicago Houston Philadelphia LasVegas
+## 1 2010-12-01      NA          0      -8       1            7       -5
+## 2 2011-01-01      NA         -1      -8       0           -5       -5
+## 3 2011-02-01      NA          5     -10       1           -7       -1
+## 4 2011-03-01      NA          1     -11       3           -7        1
+## 5 2011-04-01      NA          0      -9       2            0        1
+## 6 2011-05-01      NA         -1     -10      -1            3       -3
+##   SanFrancisco Detroit Seattle Baltimore Washington Richmond Roanoke
+## 1           19      -3      -6         3         29        6       2
+## 2          -18     -12      -4         8         38        2      -5
+## 3          -62     -12      -2         7         35        2      -2
+## 4          -87     -10      -4        10         27        0      -1
+## 5          -70      -4      -8         8         17        2       7
+## 6          -54      -4      -9         5          3        5       4
+\end{verbatim}
+
+Melt, and line graph of the changes for each city. The graph is kind of
+hard to visualize, but it looks like San Francisco had the highest
+change from time to time.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_cmelt }\OtherTok{\textless{}{-}} \FunctionTok{melt}\NormalTok{(zillow\_change, }\AttributeTok{id =} \StringTok{"Date"}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(zillow\_cmelt)[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"City"}
+\FunctionTok{names}\NormalTok{(zillow\_cmelt)[}\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"PriceChange"}
+\FunctionTok{ggplot}\NormalTok{(zillow\_cmelt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Date, }\AttributeTok{y=}\NormalTok{PriceChange, }\AttributeTok{group=}\NormalTok{City, }\AttributeTok{color=}\NormalTok{City, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Time"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Price Change"}\NormalTok{, }\AttributeTok{title=}\StringTok{"Plot of City Rent Change over Time"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+Cumulative change, to make the trends more clear in respect to each
+other
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_cumulative }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{cumsum}\NormalTok{(zillow\_change[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{14}\NormalTok{]))}
+\NormalTok{zillow\_cumulative}\SpecialCharTok{$}\NormalTok{Date }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_focus}\SpecialCharTok{$}\NormalTok{Date[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{75}\NormalTok{]}
+\NormalTok{zillow\_cumulative }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_cumulative }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Date, }\FunctionTok{everything}\NormalTok{())}
+\FunctionTok{head}\NormalTok{(zillow\_cumulative)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Date NewYork LosAngeles Chicago Houston Philadelphia LasVegas
+## 1 2010-12-01      NA          0      -8       1            7       -5
+## 2 2011-01-01      NA         -1     -16       1            2      -10
+## 3 2011-02-01      NA          4     -26       2           -5      -11
+## 4 2011-03-01      NA          5     -37       5          -12      -10
+## 5 2011-04-01      NA          5     -46       7          -12       -9
+## 6 2011-05-01      NA          4     -56       6           -9      -12
+##   SanFrancisco Detroit Seattle Baltimore Washington Richmond Roanoke
+## 1           19      -3      -6         3         29        6       2
+## 2            1     -15     -10        11         67        8      -3
+## 3          -61     -27     -12        18        102       10      -5
+## 4         -148     -37     -16        28        129       10      -6
+## 5         -218     -41     -24        36        146       12       1
+## 6         -272     -45     -33        41        149       17       5
+\end{verbatim}
+
+Another graph, this time of cumulative change. San Francisco had the
+greatest change, while Seattle had the second largest. Detroit had the
+most negative change, falling below 0 overall.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_cumumelt }\OtherTok{\textless{}{-}} \FunctionTok{melt}\NormalTok{(zillow\_cumulative, }\AttributeTok{id =} \StringTok{"Date"}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(zillow\_cumumelt)[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"City"}
+\FunctionTok{names}\NormalTok{(zillow\_cumumelt)[}\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"CumulativePriceChange"}
+\FunctionTok{ggplot}\NormalTok{(zillow\_cumumelt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Date, }\AttributeTok{y=}\NormalTok{CumulativePriceChange, }\AttributeTok{group=}\NormalTok{City, }\AttributeTok{color=}\NormalTok{City, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Time"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Cumulative Change"}\NormalTok{, }\AttributeTok{title=}\StringTok{"Plot of Cumulative City Rent Change over Time"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+\hypertarget{first-order-change-as-a-percentage-proportion-of-the-total-rent}{%
+\subsection{First Order change, as a percentage proportion of the total
+rent}\label{first-order-change-as-a-percentage-proportion-of-the-total-rent}}
+
+Find the first order change as a Percent
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_proportion }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_change[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{14}\NormalTok{]}\SpecialCharTok{/}\NormalTok{zillow\_focus[}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\SpecialCharTok{:}\DecValTok{75}\NormalTok{), }\DecValTok{2}\SpecialCharTok{:}\DecValTok{14}\NormalTok{]}\SpecialCharTok{*}\DecValTok{100}
+\NormalTok{zillow\_proportion}\SpecialCharTok{$}\NormalTok{Date }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_focus}\SpecialCharTok{$}\NormalTok{Date[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{75}\NormalTok{]}
+\NormalTok{zillow\_proportion }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_proportion }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Date, }\FunctionTok{everything}\NormalTok{())}
+\FunctionTok{head}\NormalTok{(zillow\_proportion)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Date NewYork LosAngeles Chicago Houston Philadelphia LasVegas
+## 1 2010-12-01      NA     0.0000  -0.514  0.0834        0.637  -0.4227
+## 2 2011-01-01      NA    -0.0458  -0.517  0.0000       -0.457  -0.4244
+## 3 2011-02-01      NA     0.2285  -0.651  0.0833       -0.644  -0.0850
+## 4 2011-03-01      NA     0.0457  -0.721  0.2494       -0.648   0.0849
+## 5 2011-04-01      NA     0.0000  -0.593  0.1660        0.000   0.0848
+## 6 2011-05-01      NA    -0.0457  -0.664 -0.0831        0.277  -0.2551
+##   SanFrancisco Detroit Seattle Baltimore Washington Richmond Roanoke
+## 1        0.592  -0.355  -0.345     0.251      1.316    0.668  0.1874
+## 2       -0.564  -1.442  -0.230     0.665      1.696    0.222 -0.4708
+## 3       -1.983  -1.463  -0.115     0.579      1.538    0.222 -0.1887
+## 4       -2.862  -1.235  -0.231     0.820      1.172    0.000 -0.0944
+## 5       -2.357  -0.496  -0.465     0.651      0.733    0.221  0.6567
+## 6       -1.852  -0.499  -0.525     0.406      0.129    0.550  0.3738
+\end{verbatim}
+
+It looks like Richmond has a pretty varied proportional change. It's
+still hard to make anything out of it, so let's move to the cumulative
+proportional change again.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_pmelt }\OtherTok{\textless{}{-}} \FunctionTok{melt}\NormalTok{(zillow\_proportion, }\AttributeTok{id =} \StringTok{"Date"}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(zillow\_pmelt)[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"City"}
+\FunctionTok{names}\NormalTok{(zillow\_pmelt)[}\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"ProportionChange"}
+\FunctionTok{ggplot}\NormalTok{(zillow\_pmelt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Date, }\AttributeTok{y=}\NormalTok{ProportionChange, }\AttributeTok{group=}\NormalTok{City, }\AttributeTok{color=}\NormalTok{City, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Time"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Proportional Change"}\NormalTok{, }\AttributeTok{title=}\StringTok{"Plot of City Rent Change over Time"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+Quick histogram of the distribution of proportional changes. The
+proportional changes over time look pretty normal taken together as a
+whole, with maybe a slight right skew, which makes sense as we would
+guess that rent prices should generally increase over time with
+inflation and what not. Remember, these changes are in percentages.
+There are outliers on both sides of the boxplot, which matches what we
+see in the histogram. Here are the measures of variance and qqnorm plots
+as well
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(zillow\_pmelt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{ProportionChange, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_histogram}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x =} \StringTok{"Proportional Change in Percentages"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-16-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{(zillow\_pmelt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{ProportionChange, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_boxplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-16-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{qqnorm}\NormalTok{(zillow\_pmelt}\SpecialCharTok{$}\NormalTok{ProportionChange)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-16-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{summary}\NormalTok{(zillow\_pmelt}\SpecialCharTok{$}\NormalTok{ProportionChange)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   -2.90   -0.13    0.18    0.20    0.54    2.45      13
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{var}\NormalTok{(zillow\_pmelt}\SpecialCharTok{$}\NormalTok{ProportionChange, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.362
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sd}\NormalTok{(zillow\_pmelt}\SpecialCharTok{$}\NormalTok{ProportionChange, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.602
+\end{verbatim}
+
+Just making the cumulative melt for proportions now. We will drop New
+York before plotting the values, as there are too many NAs.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_pdrop }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_proportion[}\DecValTok{3}\SpecialCharTok{:}\DecValTok{14}\NormalTok{]}
+\NormalTok{zillow\_pcumulative }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{cumsum}\NormalTok{(zillow\_pdrop))}
+\NormalTok{zillow\_pcumulative}\SpecialCharTok{$}\NormalTok{Date }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_focus}\SpecialCharTok{$}\NormalTok{Date[}\DecValTok{2}\SpecialCharTok{:}\DecValTok{75}\NormalTok{]}
+\NormalTok{zillow\_pcumulative }\OtherTok{\textless{}{-}}\NormalTok{ zillow\_pcumulative }\SpecialCharTok{\%\textgreater{}\%}\NormalTok{ dplyr}\SpecialCharTok{::}\FunctionTok{select}\NormalTok{(Date, }\FunctionTok{everything}\NormalTok{())}
+\FunctionTok{head}\NormalTok{(zillow\_pcumulative)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         Date LosAngeles Chicago Houston Philadelphia LasVegas SanFrancisco
+## 1 2010-12-01     0.0000  -0.514  0.0834        0.637   -0.423        0.592
+## 2 2011-01-01    -0.0458  -1.032  0.0834        0.180   -0.847        0.028
+## 3 2011-02-01     0.1827  -1.682  0.1667       -0.464   -0.932       -1.955
+## 4 2011-03-01     0.2284  -2.403  0.4161       -1.112   -0.847       -4.817
+## 5 2011-04-01     0.2284  -2.996  0.5821       -1.112   -0.762       -7.173
+## 6 2011-05-01     0.1827  -3.660  0.4990       -0.835   -1.017       -9.025
+##   Detroit Seattle Baltimore Washington Richmond Roanoke
+## 1  -0.355  -0.345     0.251       1.32    0.668  0.1874
+## 2  -1.798  -0.575     0.916       3.01    0.890 -0.2834
+## 3  -3.261  -0.691     1.495       4.55    1.112 -0.4720
+## 4  -4.496  -0.922     2.314       5.72    1.112 -0.5665
+## 5  -4.992  -1.386     2.966       6.45    1.333  0.0902
+## 6  -5.491  -1.912     3.371       6.58    1.883  0.4640
+\end{verbatim}
+
+We will drop New York before plotting the values, as there are too many
+NAs. Now, it looks like the proportional change of Seattle is a bit
+higher than San Francisco, and Richmond is up there too. Detroit still
+has the most negative proportional change overall.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_pcumumelt }\OtherTok{\textless{}{-}} \FunctionTok{melt}\NormalTok{(zillow\_pcumulative, }\AttributeTok{id =} \StringTok{"Date"}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(zillow\_pcumumelt)[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"City"}
+\FunctionTok{names}\NormalTok{(zillow\_pcumumelt)[}\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"CumulativeProportionChange"}
+\FunctionTok{ggplot}\NormalTok{(zillow\_pcumumelt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{Date, }\AttributeTok{y=}\NormalTok{CumulativeProportionChange, }\AttributeTok{group=}\NormalTok{City, }\AttributeTok{color=}\NormalTok{City, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Time"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Cumu. Prop. Change"}\NormalTok{, }\AttributeTok{title=}\StringTok{"Plot of Cumulative City Rent Change over Time"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-18-1.pdf}
+
+Box plot of each city's proportional change. As expected, San Francisco
+and Roanoke seem to have the largest ranges and variances. We are also
+dropping New York again.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zillow\_prodrop }\OtherTok{=}\NormalTok{ zillow\_proportion[}\SpecialCharTok{{-}}\DecValTok{2}\NormalTok{]}
+\NormalTok{zillow\_pdmelt }\OtherTok{\textless{}{-}} \FunctionTok{melt}\NormalTok{(zillow\_prodrop, }\AttributeTok{id =} \StringTok{"Date"}\NormalTok{)}
+\FunctionTok{names}\NormalTok{(zillow\_pdmelt)[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"City"}
+\FunctionTok{names}\NormalTok{(zillow\_pdmelt)[}\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"ProportionChange"}
+\FunctionTok{ggplot}\NormalTok{(zillow\_pdmelt, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{City, }\AttributeTok{y=}\NormalTok{ProportionChange, }\AttributeTok{color=}\NormalTok{City, }\AttributeTok{na.rm=}\ConstantTok{TRUE}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{outlier.shape=}\DecValTok{2}\NormalTok{, }\AttributeTok{outlier.size=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{6101_Project1_FinalSummary_files/figure-latex/unnamed-chunk-19-1} \end{center}
+
+\hypertarget{anova-test-and-post-hoc-tukey-hsd}{%
+\subsection{Anova Test and Post-hoc Tukey
+HSD}\label{anova-test-and-post-hoc-tukey-hsd}}
+
+We will now anova test the proportional changes against each other, and
+see if the average change between years is different. Since we have a
+p-value less than our alpha, there are significant differences in
+changes, and thus, we look at the Post-hoc Tukey HSD. It looks like the
+pairs that have significantly different average proportional changes are
+{[}Detroit-LosAngeles{]}, {[}Roanoke-LosAngeles{]},
+{[}SanFrancisco-Chicago{]}, {[}Seattle-Chicago{]},
+{[}Richmond-Chicago{]}, {[}Detroit-Houston{]},
+{[}Seattle-Philadelphia{]}, {[}SanFrancisco-LasVegas{]},
+{[}Seattle-LasVegas{]}, {[}Richmond-LasVegas{]},
+{[}Detroit-SanFrancisco{]}, {[}Roanoke-SanFrancisco{]},
+{[}Seattle-Detroit{]}, {[}Washington-Detroit{]}, {[}Richmond-Detroit{]},
+{[}Baltimore-Seattle{]}, {[}Roanoke-Seattle{]}, and finally,
+{[}Roanoke-Richmond{]}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pm\_anova }\OtherTok{=} \FunctionTok{aov}\NormalTok{(zillow\_pdmelt}\SpecialCharTok{$}\NormalTok{ProportionChange }\SpecialCharTok{\textasciitilde{}}\NormalTok{ zillow\_pdmelt}\SpecialCharTok{$}\NormalTok{City)}
+\FunctionTok{summary}\NormalTok{(pm\_anova)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                     Df Sum Sq Mean Sq F value  Pr(>F)    
+## zillow_pdmelt$City  11   31.4   2.855    8.52 2.1e-14 ***
+## Residuals          876  293.6   0.335                    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tukeyAoV }\OtherTok{\textless{}{-}} \FunctionTok{TukeyHSD}\NormalTok{(pm\_anova)}
+\NormalTok{tukeyAoV}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Tukey multiple comparisons of means
+##     95% family-wise confidence level
+## 
+## Fit: aov(formula = zillow_pdmelt$ProportionChange ~ zillow_pdmelt$City)
+## 
+## $`zillow_pdmelt$City`
+##                               diff     lwr      upr p adj
+## Chicago-LosAngeles        -0.25457 -0.5665  0.05734 0.241
+## Houston-LosAngeles        -0.07357 -0.3855  0.23834 1.000
+## Philadelphia-LosAngeles   -0.17203 -0.4839  0.13988 0.814
+## LasVegas-LosAngeles       -0.25543 -0.5673  0.05648 0.236
+## SanFrancisco-LosAngeles    0.11176 -0.2001  0.42366 0.991
+## Detroit-LosAngeles        -0.47720 -0.7891 -0.16529 0.000
+## Seattle-LosAngeles         0.16025 -0.1517  0.47215 0.876
+## Baltimore-LosAngeles      -0.18919 -0.5011  0.12272 0.702
+## Washington-LosAngeles     -0.08766 -0.3996  0.22424 0.999
+## Richmond-LosAngeles        0.08187 -0.2300  0.39377 0.999
+## Roanoke-LosAngeles        -0.37085 -0.6828 -0.05895 0.006
+## Houston-Chicago            0.18100 -0.1309  0.49291 0.758
+## Philadelphia-Chicago       0.08254 -0.2294  0.39445 0.999
+## LasVegas-Chicago          -0.00086 -0.3128  0.31104 1.000
+## SanFrancisco-Chicago       0.36633  0.0544  0.67823 0.007
+## Detroit-Chicago           -0.22263 -0.5345  0.08928 0.450
+## Seattle-Chicago            0.41482  0.1029  0.72672 0.001
+## Baltimore-Chicago          0.06538 -0.2465  0.37729 1.000
+## Washington-Chicago         0.16691 -0.1450  0.47881 0.842
+## Richmond-Chicago           0.33644  0.0245  0.64834 0.022
+## Roanoke-Chicago           -0.11628 -0.4282  0.19562 0.987
+## Philadelphia-Houston      -0.09846 -0.4104  0.21344 0.997
+## LasVegas-Houston          -0.18186 -0.4938  0.13004 0.752
+## SanFrancisco-Houston       0.18533 -0.1266  0.49723 0.729
+## Detroit-Houston           -0.40363 -0.7155 -0.09172 0.001
+## Seattle-Houston            0.23381 -0.0781  0.54572 0.369
+## Baltimore-Houston         -0.11562 -0.4275  0.19628 0.988
+## Washington-Houston        -0.01409 -0.3260  0.29781 1.000
+## Richmond-Houston           0.15544 -0.1565  0.46734 0.897
+## Roanoke-Houston           -0.29728 -0.6092  0.01462 0.079
+## LasVegas-Philadelphia     -0.08340 -0.3953  0.22850 0.999
+## SanFrancisco-Philadelphia  0.28379 -0.0281  0.59569 0.116
+## Detroit-Philadelphia      -0.30517 -0.6171  0.00673 0.062
+## Seattle-Philadelphia       0.33227  0.0204  0.64418 0.025
+## Baltimore-Philadelphia    -0.01716 -0.3291  0.29474 1.000
+## Washington-Philadelphia    0.08437 -0.2275  0.39627 0.999
+## Richmond-Philadelphia      0.25390 -0.0580  0.56580 0.244
+## Roanoke-Philadelphia      -0.19882 -0.5107  0.11308 0.631
+## SanFrancisco-LasVegas      0.36719  0.0553  0.67909 0.007
+## Detroit-LasVegas          -0.22177 -0.5337  0.09014 0.456
+## Seattle-LasVegas           0.41568  0.1038  0.72758 0.001
+## Baltimore-LasVegas         0.06624 -0.2457  0.37815 1.000
+## Washington-LasVegas        0.16777 -0.1441  0.47967 0.838
+## Richmond-LasVegas          0.33730  0.0254  0.64920 0.021
+## Roanoke-LasVegas          -0.11542 -0.4273  0.19648 0.988
+## Detroit-SanFrancisco      -0.58895 -0.9009 -0.27705 0.000
+## Seattle-SanFrancisco       0.04849 -0.2634  0.36039 1.000
+## Baltimore-SanFrancisco    -0.30095 -0.6129  0.01096 0.070
+## Washington-SanFrancisco   -0.19942 -0.5113  0.11248 0.626
+## Richmond-SanFrancisco     -0.02989 -0.3418  0.28202 1.000
+## Roanoke-SanFrancisco      -0.48261 -0.7945 -0.17070 0.000
+## Seattle-Detroit            0.63744  0.3255  0.94935 0.000
+## Baltimore-Detroit          0.28801 -0.0239  0.59991 0.103
+## Washington-Detroit         0.38953  0.0776  0.70144 0.003
+## Richmond-Detroit           0.55907  0.2472  0.87097 0.000
+## Roanoke-Detroit            0.10635 -0.2056  0.41825 0.994
+## Baltimore-Seattle         -0.34943 -0.6613 -0.03753 0.014
+## Washington-Seattle        -0.24791 -0.5598  0.06400 0.279
+## Richmond-Seattle          -0.07838 -0.3903  0.23353 1.000
+## Roanoke-Seattle           -0.53110 -0.8430 -0.21919 0.000
+## Washington-Baltimore       0.10153 -0.2104  0.41343 0.996
+## Richmond-Baltimore         0.27106 -0.0408  0.58296 0.162
+## Roanoke-Baltimore         -0.18166 -0.4936  0.13024 0.754
+## Richmond-Washington        0.16953 -0.1424  0.48144 0.828
+## Roanoke-Washington        -0.28319 -0.5951  0.02872 0.118
+## Roanoke-Richmond          -0.45272 -0.7646 -0.14082 0.000
+\end{verbatim}
+
+\end{document}
