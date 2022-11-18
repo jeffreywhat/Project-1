@@ -200,6 +200,6 @@ auc(h)
 plot(h)
 ```
 
-The AUC of the logit model is .861, which is over .8 and probably considered not bad. On the other hand, the AUC of the KNN model is only .79, and a higher specificity trades a lot of sensitivity, which makes some sense because our model was relatively quite bad at predicting the Yes's. Still, there is the concern of over fitting with the logit model, as it is a full model which could possibly lead to too many insignificant covariates.
+The AUC of the logit model is .861, which is over .8 and probably considered not bad. On the other hand, the AUC of the KNN model is only .79, and a higher specificity trades a lot of sensitivity, which makes some sense because our model was relatively quite bad at predicting the Yes's (due to the fact that we were looking to maximize accuracy, not sensitivity and specificity). Still, there is the concern of over fitting with the logit model, as it is a full model which could possibly lead to too many insignificant covariates.
 
 
